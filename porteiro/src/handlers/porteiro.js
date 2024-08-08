@@ -32,7 +32,6 @@ exports.stopEC2Instances = () => {
 // Usando outra funcao lambda com a mesma logica
 
 // const AWS = require("aws-sdk");
-
 // AWS.config.update({region: "us-east-1"});
 // const ec2 = new AWS.EC2({apiVersion: "2016-11-15"});
 // const params = {
