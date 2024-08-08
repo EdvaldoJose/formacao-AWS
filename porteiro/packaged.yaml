@@ -1,0 +1,53 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: 'porteiro
+
+  Sample SAM Template for porteiro
+
+  '
+Resources:
+  LigarPorteiro:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/handlers/porteiro.startEC2Instances
+      Runtime: nodejs20.x
+      Architectures:
+      - x86_64
+      Timeout: 3
+      Events:
+        CloudWatchEvent:
+          Type: Schedule
+          Properties:
+            Schedule: cron(50 10 ? * MON-FRI *)
+      Policies:
+      - Statement:
+        - Sid: StartEC2
+          Effect: Allow
+          Action:
+          - ec2:StartInstances
+          Resource: '*'
+      CodeUri: s3://meu-bucket-deploy-lambda/a60481774e68f47ab28446b9bbf03319
+    Metadata:
+      SamResourceId: LigarPorteiro
+  DesligarPorteiro:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/handlers/porteiro.stopEC2Instances
+      Runtime: nodejs20.x
+      Architectures:
+      - x86_64
+      Events:
+        CloudWatchEvent:
+          Type: Schedule
+          Properties:
+            Schedule: cron(50 10 ? * MON-FRI *)
+      Policies:
+      - Statement:
+        - Sid: StopEC2
+          Effect: Allow
+          Action:
+          - ec2:StopInstances
+          Resource: '*'
+      CodeUri: s3://meu-bucket-deploy-lambda/a60481774e68f47ab28446b9bbf03319
+    Metadata:
+      SamResourceId: DesligarPorteiro
